@@ -1,8 +1,5 @@
 package com.example.insertfirebase;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -11,6 +8,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -18,7 +18,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class Login extends AppCompatActivity {
-    FirebaseAuth mauth ;
+    FirebaseAuth mauth;
     EditText userlogin;
     EditText userloginpass;
     Button loginbtn;
@@ -29,11 +29,17 @@ public class Login extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        userlogin = (EditText)findViewById(R.id.text_username);
-        userloginpass= (EditText)findViewById(R.id.text_password);
+//        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+//            Intent intent = new Intent(Login.this, MainActivity.class);
+//            startActivity(intent);
+//            finish();
+//        }
 
-        loginbtn = (Button)findViewById(R.id.btn_login);
-        already = (Button)findViewById(R.id.btn_have);
+        userlogin = findViewById(R.id.text_username);
+        userloginpass = findViewById(R.id.text_password);
+
+        loginbtn = findViewById(R.id.btn_login);
+        already = findViewById(R.id.btn_have);
         mauth = FirebaseAuth.getInstance();
 
         loginbtn.setOnClickListener(new View.OnClickListener() {
@@ -41,27 +47,25 @@ public class Login extends AppCompatActivity {
             public void onClick(View v) {
                 String loginemail = userlogin.getText().toString();
                 String loginpass = userloginpass.getText().toString();
-                if(!TextUtils.isEmpty(loginemail) && !TextUtils.isEmpty(loginpass)){
+                if (!TextUtils.isEmpty(loginemail) && !TextUtils.isEmpty(loginpass)) {
 
-                    mauth.signInWithEmailAndPassword(loginemail,loginpass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    mauth.signInWithEmailAndPassword(loginemail, loginpass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
-                            if(task.isSuccessful())
-                            {
-                                Intent intent = new Intent(Login.this,MainActivity.class);
+                            if (task.isSuccessful()) {
+                                Intent intent = new Intent(Login.this, MainActivity.class);
                                 startActivity(intent);
-                            }
-                            else {
+                            } else {
                                 String error = task.getException().getMessage();
-                                Toast.makeText(Login.this,"Error"+error,Toast.LENGTH_LONG).show();
+                                Toast.makeText(Login.this, "Error" + error, Toast.LENGTH_LONG).show();
 
                             }
                         }
                     });
 
 
-                }else {
-                    Toast.makeText(getApplicationContext(),"please please fill all required fields",Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), "please please fill all required fields", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -69,19 +73,19 @@ public class Login extends AppCompatActivity {
         already.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Login.this,Register.class);
+                Intent intent = new Intent(Login.this, Register.class);
                 startActivity(intent);
             }
         });
     }
+
     @Override
     protected void onStart() {
         super.onStart();
         FirebaseUser currentuser = mauth.getCurrentUser();
 
-        if(currentuser != null)
-        {
-            Intent mainintent = new Intent(Login.this,MainActivity.class);
+        if (currentuser != null) {
+            Intent mainintent = new Intent(Login.this, MainActivity.class);
             startActivity(mainintent);
             finish();
         }
